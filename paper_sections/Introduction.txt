@@ -1,0 +1,20 @@
+Introduction
+
+Air pollution has become a critical environmental issue, significantly affecting human health, ecosystems, and climate stability. The rapid industrialization, urbanization, and vehicular emissions have led to deteriorating air quality worldwide, necessitating effective monitoring and predictive systems to mitigate its impact. This research focuses on developing the Pollution Predictor, a machine learning-driven system that leverages historical air quality data to forecast future pollution levels. By analyzing key air quality parameters such as the Air Quality Index (AQI), PM2.5, and PM10 concentrations, the system aims to provide an early warning mechanism to reduce exposure to hazardous pollutants.
+
+The proposed system utilizes TensorFlow.js for real-time model inference and offers a web-based interactive platform for users to access predictions seamlessly. The approach involves preprocessing large-scale environmental datasets, feature engineering, and the development of predictive models that capture seasonal and temporal variations in pollution levels. Visualization through heatmaps enhances interpretability and allows for comparative analysis over time. The system is designed to support policymakers, researchers, and the general public in mitigating pollution-related risks by providing accurate, data-driven insights.
+
+Recent advancements in air pollution prediction have explored a variety of machine learning (ML) and deep learning (DL) techniques. For instance, hybrid models combining convolutional networks with recurrent layers have proven effective in capturing spatial-temporal correlations in air quality data [1]. Regression-based models, particularly LSTM, have demonstrated high accuracy, particularly in forecasting pollution during specific seasons, such as winter in India [2]. While significant progress has been made, challenges such as computational overhead, model generalization, and real-time deployment remain. The current research seeks to address these challenges by offering a practical and scalable solution for pollution forecasting.
+
+Machine learning models, including support vector regression (SVR), random forests (RF), and deep learning models like CNN, LSTM, and RNN, have been applied to air quality prediction, yielding promising results. However, integrating real-time monitoring and enhancing the energy efficiency of these models remains an ongoing challenge [3][4]. Moreover, hybrid approaches and the incorporation of remote sensing technologies, such as satellite imagery, offer opportunities for improving prediction accuracy and emission tracking, especially in industrial zones [5]. Despite these advancements, the real-time deployment of these models continues to be a barrier to widespread implementation [6].
+
+This study emphasizes the potential of data science in solving pressing environmental concerns and highlights the importance of predictive analytics in public health management. By combining machine learning techniques with real-world data, the Pollution Predictor project demonstrates a step forward in improving air quality forecasting and supporting sustainable urban development.
+
+References
+[1] G. Chen, S. Chen, D. Li, and C. Chen, "Hybrid Deep Learning Prediction," Scientific Report, 2025.
+[2] S. Dey et al., "Apict: Air Pollution Epidemiology Using Green AQI Prediction During Winter Seasons in India," IEEE Transactions on Sustainable Computing, 2024.
+[3] A. Mittal et al., "Advancements in Air Pollution Prediction and Classification Models," ICACCS, 2024.
+[4] M. Srbinovska et al., "Comprehensive Study on Air Pollution Prediction in North Macedonia," IcETRAN, 2024.
+[5] A. Nakhjiri and A. Abdollahi Kakroodi, "Air Pollution in Industrial Clusters: A Comprehensive Analysis and Prediction Using Multi-Source Data," Ecological Informatics, 2024.
+[6] J. Vachon et al., "Do Machine Learning Methods Improve Prediction of Ambient Air Pollutants with High Spatial Contrast? A Systematic Review," Environmental Research, 2024.
+
