@@ -1,0 +1,16 @@
+Characteristic Equations for Pollution Prediction
+
+Features Used (in order):
+Temperature, tempmax, tempmin, feelslikemax, feelslikemin, humidity, precip, windspeed, heat_index, congestion_index, fbd_temp, fbd_RH, gzb_temp, gzb_RH, mrt_temp, mrt_RH, ggn_temp, ggn_RH, noida_temp, noida_RH
+
+Equation for PM2.5:
+PM2.5 =
+68.23*Temperature + 29.74*tempmax + -23.13*tempmin + -3.4*feelslikemax + 8.31*feelslikemin + 9.25*humidity + -0.04*precip + -3.27*windspeed + 12.52*heat_index + -1.15*congestion_index + -4.97*fbd_temp + 0.29*fbd_RH + -21.74*gzb_temp + -9.14*gzb_RH + -12.21*mrt_temp + -0.51*mrt_RH + -6.05*ggn_temp + -17.54*ggn_RH + 36.21*noida_temp + 22.8*noida_RH + 113.19
+
+Equation for PM10:
+PM10 =
+102.33*Temperature + 44.63*tempmax + -34.7*tempmin + -5.12*feelslikemax + 12.46*feelslikemin + 13.88*humidity + -0.06*precip + -4.92*windspeed + 18.81*heat_index + -1.73*congestion_index + -7.46*fbd_temp + 0.41*fbd_RH + -32.62*gzb_temp + -13.7*gzb_RH + -18.3*mrt_temp + -0.77*mrt_RH + -9.05*ggn_temp + -26.3*ggn_RH + 54.31*noida_temp + 34.2*noida_RH + 169.78
+
+Equation for AQI:
+AQI =
+-0.12*Temperature + 1.16*tempmax + 2.92*tempmin + 1.98*feelslikemax + -0.48*feelslikemin + -3.57*humidity + 0.21*precip + 0.06*windspeed + 1.25*heat_index + -0.24*congestion_index + 0.18*fbd_temp + 1.07*fbd_RH + 0.89*gzb_temp + 0.05*gzb_RH + 0.41*mrt_temp + 1.09*mrt_RH + 0.08*ggn_temp + -0.09*ggn_RH + 0.62*noida_temp + -0.57*noida_RH + 26.34
