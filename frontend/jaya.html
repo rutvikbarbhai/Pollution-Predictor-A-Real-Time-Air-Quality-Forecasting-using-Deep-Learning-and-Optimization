@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pollution Predictor</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #f9f9f9;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 1rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+    input {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 100%;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pollution Predictor (PM2.5, PM10, AQI)</h2>
+    <div class="grid" id="inputs"></div>
+    <button onclick="predict()">Predict</button>
+    <div class="result" id="output"></div>
+  </div>
+
+  <script>
+    const weights = {
+      pm25: [68.23, 29.74, -23.13, -3.40, 8.31, 9.25, -0.04, -3.27, 12.52, -1.15, -4.97, 0.29, -21.74, -9.14, -12.21, -0.51, -6.05, -17.54, 36.21, 22.80],
+      pm10: [102.33, 44.63, -34.70, -5.12, 12.46, 13.88, -0.06, -4.92, 18.81, -1.73, -7.46, 0.41, -32.62, -13.70, -18.30, -0.77, -9.05, -26.30, 54.31, 34.20],
+      aqi:  [-0.12, 1.16, 2.92, 1.98, -0.48, -3.57, 0.21, 0.06, 1.25, -0.24, 0.18, 1.07, 0.89, 0.05, 0.41, 1.09, 0.08, -0.09, 0.62, -0.57]
+    };
+
+    const biases = {
+      pm25: 113.19,
+      pm10: 169.78,
+      aqi: 26.34
+    };
+
+    const inputDiv = document.getElementById('inputs');
+    for (let i = 0; i < 20; i++) {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.placeholder = `X${i+1}`;
+      input.id = `x${i}`;
+      inputDiv.appendChild(input);
+    }
+
+    function predict() {
+      const inputs = [];
+      for (let i = 0; i < 20; i++) {
+        const val = parseFloat(document.getElementById(`x${i}`).value);
+        if (isNaN(val)) {
+          alert(`Please fill in all fields correctly.`);
+          return;
+        }
+        inputs.push(val);
+      }
+
+      const tensorX = tf.tensor1d(inputs);
+
+      function compute(weightsArray, bias) {
+        return tensorX.dot(tf.tensor1d(weightsArray)).arraySync() + bias;
+      }
+
+      const pm25 = compute(weights.pm25, biases.pm25).toFixed(2);
+      const pm10 = compute(weights.pm10, biases.pm10).toFixed(2);
+      const aqi = compute(weights.aqi, biases.aqi).toFixed(2);
+
+      document.getElementById('output').innerHTML = `
+        <p><strong>PM2.5:</strong> ${pm25}</p>
+        <p><strong>PM10:</strong> ${pm10}</p>
+        <p><strong>AQI:</strong> ${aqi}</p>
+      `;
+    }
+  </script>
+</body>
+</html>

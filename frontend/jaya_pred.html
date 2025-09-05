@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pollution Predictor – Jaya‑Optimized</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    body {font-family: Arial, sans-serif;background:#f8f8f8;margin:0;padding:2rem;}
+    .card {background:white;padding:2rem;border-radius:12px;max-width:960px;margin:auto;box-shadow:0 4px 12px rgba(0,0,0,0.08);} 
+    h1 {margin-top:0;font-size:1.6rem;}
+    input[type=file]{margin:1rem 0;font-size:1rem;}
+    button {padding:0.6rem 1.4rem;border:none;border-radius:6px;background:#007bff;color:white;font-size:1rem;cursor:pointer;}
+    button:disabled{background:#aaa;cursor:not-allowed;}
+    #log {margin-top:1rem;font-family:monospace;white-space:pre-line;background:#f0f0f0;padding:1rem;border-radius:8px;max-height:260px;overflow:auto;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Pollution Prediction with Jaya Optimization</h1>
+    <p>Upload a CSV containing the 20 feature columns plus measured <code>pm25_value</code>, <code>pm10_value</code>, and <code>AQI</code>. The app will fine‑tune linear weights via the Jaya algorithm and output predictions.</p>
+    <input type="file" id="csvFile" accept=".csv" />
+    <button id="runBtn" onclick="handleRun()" disabled>Optimize & Predict</button>
+    <button id="downloadBtn" onclick="downloadCSV()" disabled>Download Predictions CSV</button>
+    <div id="log"></div>
+  </div>
+
+<script>
+  const INIT = {
+    pm25:  {w:[68.23,29.74,-23.13,-3.40,8.31,9.25,-0.04,-3.27,12.52,-1.15,-4.97,0.29,-21.74,-9.14,-12.21,-0.51,-6.05,-17.54,36.21,22.80], b:113.19},
+    pm10:  {w:[102.33,44.63,-34.70,-5.12,12.46,13.88,-0.06,-4.92,18.81,-1.73,-7.46,0.41,-32.62,-13.70,-18.30,-0.77,-9.05,-26.30,54.31,34.20], b:169.78},
+    aqi:   {w:[-0.12,1.16,2.92,1.98,-0.48,-3.57,0.21,0.06,1.25,-0.24,0.18,1.07,0.89,0.05,0.41,1.09,0.08,-0.09,0.62,-0.57], b:26.34}
+  };
+  const FEATURES = ['Temperature','tempmax','tempmin','feelslikemax','feelslikemin','humidity','precip','windspeed','heat_index','congestion_index','fbd_temp','fbd_RH','gzb_temp','gzb_RH','mrt_temp','mrt_RH','ggn_temp','ggn_RH','noida_temp','noida_RH'];
+  const TARGETS = ['pm25_value','pm10_value','AQI'];
+
+  let parsedData = null;
+  let outCSV = '';
+
+  function predictRow(values, weights, bias){
+    return weights.reduce((acc, w, i) => acc + w * values[i], bias);
+  }
+
+  function jayaOptimize(dataset, targetIdx, initWeight, initBias, opts={pop:30, iters:60}){
+    const dim = FEATURES.length + 1;
+    const score = vec => dataset.reduce((sum, r) => {
+      const y = r.targets[targetIdx];
+      const yp = predictRow(r.features, vec.slice(0, -1), vec[dim-1]);
+      return sum + (y - yp) ** 2;
+    }, 0) / dataset.length;
+
+    const pop = Array.from({length: opts.pop}, () => initWeight.map(w => w * (1 + (Math.random() * 0.2 - 0.1))).concat([initBias * (1 + (Math.random() * 0.2 - 0.1))]));
+
+    for (let i = 0; i < opts.iters; i++) {
+      const scores = pop.map(score);
+      const best = pop[scores.indexOf(Math.min(...scores))];
+      const worst = pop[scores.indexOf(Math.max(...scores))];
+      for (let j = 0; j < pop.length; j++) {
+        const newVec = pop[j].map((xj, k) => {
+          const r1 = Math.random(), r2 = Math.random();
+          return xj + r1 * (best[k] - Math.abs(xj)) - r2 * (worst[k] - Math.abs(xj));
+        });
+        if (score(newVec) < scores[j]) pop[j] = newVec;
+      }
+    }
+    return pop.reduce((best, curr) => score(curr) < score(best) ? curr : best);
+  }
+
+  document.getElementById('csvFile').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      complete: results => {
+        parsedData = results.data.map(row => ({
+          features: FEATURES.map(f => parseFloat(row[f])),
+          targets: TARGETS.map(t => parseFloat(row[t]))
+        })).filter(r => !r.features.some(isNaN) && !r.targets.some(isNaN));
+        document.getElementById('runBtn').disabled = false;
+        logMsg(`Loaded ${parsedData.length} valid rows.`);
+      }
+    });
+  });
+
+  function logMsg(msg) {
+    document.getElementById('log').textContent += msg + '\n';
+  }
+
+  function handleRun() {
+    if (!parsedData) return;
+    document.getElementById('runBtn').disabled = true;
+    logMsg('Running Jaya optimization...');
+
+    const bestVecPM25 = jayaOptimize(parsedData, 0, INIT.pm25.w, INIT.pm25.b);
+    const bestVecPM10 = jayaOptimize(parsedData, 1, INIT.pm10.w, INIT.pm10.b);
+    const bestVecAQI  = jayaOptimize(parsedData, 2, INIT.aqi.w , INIT.aqi.b );
+
+    logMsg('Optimization completed. Generating predictions...');
+
+    const rows = parsedData.map(r => {
+      const [w25, b25] = [bestVecPM25.slice(0, 20), bestVecPM25[20]];
+      const [w10, b10] = [bestVecPM10.slice(0, 20), bestVecPM10[20]];
+      const [wAQI, bAQI] = [bestVecAQI.slice(0, 20), bestVecAQI[20]];
+      return {
+        ...Object.fromEntries(FEATURES.map((f, i) => [f, r.features[i]])),
+        measured_pm25: r.targets[0],
+        measured_pm10: r.targets[1],
+        measured_AQI : r.targets[2],
+        predicted_pm25: predictRow(r.features, w25, b25),
+        predicted_pm10: predictRow(r.features, w10, b10),
+        predicted_AQI : predictRow(r.features, wAQI, bAQI)
+      }
+    });
+
+    outCSV = Papa.unparse(rows);
+    document.getElementById('downloadBtn').disabled = false;
+    logMsg('Done! Click the download button to save results.');
+  }
+
+  function downloadCSV() {
+    if (!outCSV) return;
+    const blob = new Blob([outCSV], {type: 'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'predictions.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+canvas {
+    max-width: 800px;
+    max-height: 500px;
+    margin-top: 20px;
+    display: block !important;
+    border: 1px solid #ddd;
+}
