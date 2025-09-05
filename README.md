@@ -10,21 +10,101 @@ Unlike conventional optimization techniques, **Jaya is parameter-independent**, 
 The proposed framework demonstrates potential as a scalable and adaptable solution for pollution forecasting, contributing to applications in environmental monitoring, smart city infrastructure, and evidence-based policymaking.
 
 
-## ✨ Features  
+## <img src="https://github.com/user-attachments/assets/dcdcffb4-c4e2-40ee-84cc-aca8612d257e" height="30px" style="vertical-align: text-bottom; margin-bottom:-3050px;">Features  
 - 📊 Predicts pollution levels using historical datasets  
 - ⚡ Optimized with **Jaya Optimization Algorithm** for enhanced accuracy  
 - 🌐 Built with **TensorFlow.js** for real-time, browser-based predictions  
 - 📈 Scalable to different pollution datasets (**air, water, noise, etc.**)  
 - 🔮 Useful for **environmental monitoring, smart cities, and decision-making**  
 
----
 
+## <img src="https://github.com/user-attachments/assets/f3dcee8e-e008-457a-97fb-d3848b425713" height="30px" style="vertical-align:text-bottom;"> Repository Structure  
+```bash
+📂 ML-Research-Project/
+│   ├── requirements.txt
+│   ├── package.json      
+│   ├── package-lock.json         
+│   └── .gitignore
+│ 
+├── 📁 backend/           
+├── 📁 data/              
+├── 📁 frontend/      
+├── 📁 notebook/      
+├── 📁 paper_sections/     
+├── 📁 presentation/              
+├── 📁 report/           
+├── 📁 results/
+├── 📁 src/          
+└── README.md            
+```
 ## 🛠 Tech Stack  
 **Languages:** Python, JavaScript  
 **Frameworks/Libraries:** TensorFlow.js, Scikit-learn  
 **Optimization:** Jaya Algorithm  
 **Visualization:** Matplotlib, D3.js  
 
+
 ---
 
-## 📂 Repository Structure  
+## <img src="https://github.com/user-attachments/assets/6672ee8c-15ed-4fb5-9cd5-63c04ac747c1" height="24px" style="vertical-align: bottom; margin-right: 10px;"> Installation & Setup  
+
+This project has **two main components**:  
+
+1. **Python (Machine Learning Research)** – for data preprocessing, analysis, and model training.  
+2. **Node.js (Web Application with TensorFlow.js)** – for serving the frontend and enabling real-time predictions.
+
+
+### 1️⃣ Clone the Repository   
+```bash
+git clone https://github.com/rutvikbarbhai/Pollution-Predictor-A-Real-Time-Air-Quality-Forecasting-using-Deep-Learning-and-Optimization.git
+cd Pollution-Predictor-A-Real-Time-Air-Quality-Forecasting-using-Deep-Learning-and-Optimization
+```
+## <img src="https://github.com/user-attachments/assets/72050623-de79-4b7a-b803-4a1154885382" width="35px" alt="Python Setup (Machine Learning Research)">Python Setup (Machine Learning Research)
+
+```bash
+1️⃣ Create a Virtual Environment
+python -m venv venv
+
+2️⃣ Activate the Environment 
+venv\Scripts\activate  
+
+3️⃣ Install Dependencies
+pip install -r requirements.txt
+
+4️⃣ Run ML Scripts
+python src/roc_plot.py
+```
+## <img src="https://github.com/user-attachments/assets/657aedce-259b-411c-89f2-0d93f7049737" alt="nodejs" height="20px"> Node.js Setup
+```bash
+1️⃣ Install Dependencies
+npm install
+
+2️⃣ Start the Server
+node backend/server.js 
+
+3️⃣  Open in Browser
+http://localhost:3000
+```
+
+## 📊 Results
+- ROC plots for model evaluation
+-  Heatmaps for feature correlations
+-  Interactive web-based pollution prediction interface
+
+## 📜 Research Contributions
+
+- Integration of Jaya Optimization for robust ML predictions
+- Real-time predictions via TensorFlow.js frontend
+- Structured documentation aligned with research publication standards
+
+## 🚀 Future Work
+- Extend to multi-pollution datasets (air, water, noise, soil)
+- Deploy as a cloud-based monitoring tool
+- Integrate with IoT sensors for live environmental data streaming
+
+
+
+
+
+
+
