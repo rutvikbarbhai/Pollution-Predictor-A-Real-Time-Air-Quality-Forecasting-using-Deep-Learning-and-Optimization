@@ -1,0 +1,143 @@
+CREATE TABLE final_values (
+    timestamp DATETIME,
+    pm25_value INT,
+    pm10_value INT,    
+    AQI INT,
+    Temperature INT,
+    tempmax INT,
+    tempmin INT,    
+    feelslikemax INT,
+    feelslikemin INT,
+    humidity INT,
+    precip INT,
+    windspeed INT,
+    conditions VARCHAR(100),
+    heat_index INT,
+    congestion_index INT,
+    special_event VARCHAR(100)
+    );
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/final_values.csv' 
+into table final_values 
+fields terminated by ',' enclosed by '"' 
+lines terminated by '\n' 
+ignore 1 rows 
+(@timestamp,@pm25_value,@pm10_value,@Temperature,@AQI,@tempmax,@tempmin,@feelslikemax,@feelslikemin,@humidity,@precip,@windspeed,@conditions,@heat_index,@congestion_index,@special_event)
+SET 
+timestamp = STR_TO_DATE(@timestamp,'%Y-%m-%d %H:%i:%s'),
+pm25_value = NULLIF(@pm25_value,''),
+pm10_value = NULLIF(@pm10_value,''),
+Temperature = NULLIF(@Temperature,''),
+AQI = NULLIF(@AQI,''),
+tempmax = NULLIF(@tempmax,''),
+tempmin = NULLIF(@tempmin,''),
+feelslikemax = NULLIF(@feelslikemax,''),
+feelslikemin= NULLIF(@feelslikemin,''),
+humidity= NULLIF(@humidity,''),
+precip= NULLIF(@precip,''),
+windspeed = NULLIF(@windspeed,''),
+conditions = NULLIF(@conditions,''),
+heat_index = NULLIF(@heat_index,''),
+congestion_index = NULLIF(@congestion_index,''),
+special_event = NULLIF(@special_event,'');
+
+CREATE TABLE faridabad (
+    date DATETIME,
+    temperature_2m INT,
+    relative_humidity_2m INT
+    );
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/OnlyTRH_Faridabad.csv' 
+into table faridabad 
+fields terminated by ','
+lines terminated by '\n' 
+ignore 1 rows 
+(@date,@temperature_2m,@relative_humidity_2m)
+SET 
+date = STR_TO_DATE(@date,'%Y-%m-%d %H:%i:00+00:00'),
+temperature_2m = NULLIF(@temperature_2m,''),
+relative_humidity_2m = NULLIF(@relative_humidity_2m,'');
+
+CREATE TABLE ghaziabad (
+    date DATETIME,
+    temperature_2m INT,
+    relative_humidity_2m INT
+    );
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/OnlyTRH_Ghaziabad.csv' 
+into table ghaziabad 
+fields terminated by ','
+lines terminated by '\n' 
+ignore 1 rows 
+(@date,@temperature_2m,@relative_humidity_2m)
+SET 
+date = STR_TO_DATE(@date,'%Y-%m-%d %H:%i:00+00:00'),
+temperature_2m = NULLIF(@temperature_2m,''),
+relative_humidity_2m = NULLIF(@relative_humidity_2m,'');
+
+CREATE TABLE gurgaon (
+    date DATETIME,
+    temperature_2m INT,
+    relative_humidity_2m INT
+    );
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/OnlyTRH_Gurgaon.csv' 
+into table gurgaon 
+fields terminated by ','
+lines terminated by '\n' 
+ignore 1 rows 
+(@date,@temperature_2m,@relative_humidity_2m)
+SET 
+date = STR_TO_DATE(@date,'%Y-%m-%d %H:%i:00+00:00'),
+temperature_2m = NULLIF(@temperature_2m,''),
+relative_humidity_2m = NULLIF(@relative_humidity_2m,'');
+
+CREATE TABLE meerut (
+    date DATETIME,
+    temperature_2m INT,
+    relative_humidity_2m INT
+    );
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/OnlyTRH_Meerut.csv' 
+into table meerut 
+fields terminated by ','
+lines terminated by '\n' 
+ignore 1 rows 
+(@date,@temperature_2m,@relative_humidity_2m)
+SET 
+date = STR_TO_DATE(@date,'%Y-%m-%d %H:%i:00+00:00'),
+temperature_2m = NULLIF(@temperature_2m,''),
+relative_humidity_2m = NULLIF(@relative_humidity_2m,'');
+
+CREATE TABLE noida (
+    date DATETIME,
+    temperature_2m INT,
+    relative_humidity_2m INT
+    );
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/OnlyTRH_Noida.csv' 
+into table noida 
+fields terminated by ','
+lines terminated by '\n' 
+ignore 1 rows 
+(@date,@temperature_2m,@relative_humidity_2m)
+SET 
+date = STR_TO_DATE(@date,'%Y-%m-%d %H:%i:00+00:00'),
+temperature_2m = NULLIF(@temperature_2m,''),
+relative_humidity_2m = NULLIF(@relative_humidity_2m,'');
+
+
+
+
+
+
+
+SELECT 'timestamp','pm25_value','pm10_value','AQI','Temperature','tempmax','tempmin','feelslikemax','feelslikemin','humidity','precip','windspeed','conditions','heat_index','congestion_index','special_event','fbd_temp','fbd_RH','gzb_temp','gzb_RH','mrt_temp','mrt_RH','ggn_temp','ggn_RH','noida_temp','noida_RH'
+UNION ALL
+select final_values.timestamp,pm25_value,pm10_value,AQI,final_values.Temperature,tempmax,tempmin,feelslikemax,feelslikemin,humidity,precip,windspeed,conditions,heat_index,congestion_index,special_event,faridabad.temperature_2m,faridabad.relative_humidity_2m, ghaziabad.temperature_2m,ghaziabad.relative_humidity_2m, meerut.temperature_2m,meerut.relative_humidity_2m, gurgaon.temperature_2m,gurgaon.relative_humidity_2m, noida.temperature_2m,noida.relative_humidity_2m from final_values,faridabad,ghaziabad,meerut,gurgaon,noida  where  DATE_FORMAT(final_values.timestamp, '%d %m %Y %H')= DATE_FORMAT(faridabad.date, '%d %m %Y %H') 
+and DATE_FORMAT(final_values.timestamp, '%d %m %Y %H')= DATE_FORMAT(ghaziabad.date, '%d %m %Y %H')
+and DATE_FORMAT(final_values.timestamp, '%d %m %Y %H')= DATE_FORMAT(meerut.date, '%d %m %Y %H')
+and DATE_FORMAT(final_values.timestamp, '%d %m %Y %H')= DATE_FORMAT(gurgaon.date, '%d %m %Y %H')
+and DATE_FORMAT(final_values.timestamp, '%d %m %Y %H')= DATE_FORMAT(noida.date, '%d %m %Y %H')
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/final_values_combined.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
