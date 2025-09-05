@@ -1,0 +1,113 @@
+create database mini_project;
+use mini_project;
+
+CREATE TABLE raw_data (
+    timestamp DATETIME,
+    pm25_value INT,
+    pm10_value INT,    
+    AQI INT,
+    temp INT,
+    RH INT,
+    WS INT,
+    WD INT
+    );
+
+CREATE TABLE weather_data (
+    timestamp DATETIME,
+    tempmax INT,
+    tempmin INT,    
+    feelslikemax INT,
+    feelslikemin INT,
+    humidity INT,
+    precip INT,
+    windspeed INT,
+    conditions VARCHAR(100),
+    heat_index INT
+    );
+
+CREATE TABLE events_data(
+ date TIMESTAMP,
+congestion_index INT,
+special_event VARCHAR(100)
+);
+
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/DL002_filled.csv' 
+into table raw_data 
+fields terminated by ',' enclosed by '"' 
+lines terminated by '\n' 
+ignore 1 rows 
+(@timestamp,@pm25_value,@pm10_value,@Temp,@RH,@WS,@WD,@AQI)
+SET 
+timestamp = STR_TO_DATE(@timestamp,'%m/%d/%Y %H:%i'),
+pm25_value = NULLIF(@pm25_value,''),
+pm10_value = NULLIF(@pm10_value,''),
+Temp = NULLIF(@Temp,''),
+RH= NULLIF(@RH,''),
+WS= NULLIF(@WS,''),
+WD= NULLIF(@WD,''),
+AQI = NULLIF(@AQI,'');
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/kaggel_weather_2013_to_2024.csv' 
+into table weather_data 
+fields terminated by ',' enclosed by '"' 
+lines terminated by '\n' 
+ignore 1 rows 
+(@timestamp,@tempmax,@tempmin,@feelslikemax,@feelslikemin,@humidity,@precip,@windspeed,@conditions,@heat_index)
+SET 
+timestamp = STR_TO_DATE(@timestamp,'%m/%d/%Y'),
+tempmax = NULLIF(@tempmax,''),
+tempmin = NULLIF(@tempmin,''),
+feelslikemax = NULLIF(@feelslikemax,''),
+feelslikemin= NULLIF(@feelslikemin,''),
+humidity= NULLIF(@humidity,''),
+precip= NULLIF(@precip,''),
+windspeed = NULLIF(@windspeed,''),
+conditions = NULLIF(@conditions,''),
+heat_index = NULLIF(@heat_index,'');
+
+select raw_data.timestamp,pm25_value,pm10_value from raw_data,weather_data  where  DATE_FORMAT(raw_data.timestamp, '%d %m %Y')= DATE_FORMAT(weather_data.timestamp, '%d %m %Y');
+
+timestamp DATETIME,
+    pm25_value INT,
+    pm10_value INT,    
+    AQI INT,
+    temp INT,
+    RH INT,
+    WS INT,
+    WD INT
+
+ tempmax INT,
+    tempmin INT,    
+    feelslikemax INT,
+    feelslikemin INT,
+    humidity INT,
+    precip INT,
+    windspeed INT,
+    conditions VARCHAR(100),
+    heat_index INT
+
+
+SELECT 'timestamp','pm25_value','pm10_value','AQI','Temperature','tempmax','tempmin','feelslikemax','feelslikemin','humidity','precip','windspeed','conditions','heat_index'
+UNION ALL
+select raw_data.timestamp,pm25_value,pm10_value,AQI,temp,tempmax,tempmin,feelslikemax,feelslikemin,RH,precip,windspeed,conditions,heat_index from raw_data,weather_data  where  DATE_FORMAT(raw_data.timestamp, '%d %m %Y')= DATE_FORMAT(weather_data.timestamp, '%d %m %Y')
+ INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/values_combined.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/delhi_traffic_congestion.csv' 
+into table events_data 
+fields terminated by ',' enclosed by '"' 
+lines terminated by '\n' 
+ignore 1 rows 
+(@date,@congestion_index,@special_event)
+SET 
+date = STR_TO_DATE(@date,'%Y-%m-%d'),
+congestion_index = NULLIF(@congestion_index,''),
+special_event = NULLIF(@special_event,'');
+
+SELECT 'timestamp','pm25_value','pm10_value','AQI','Temperature','tempmax','tempmin','feelslikemax','feelslikemin','humidity','precip','windspeed','conditions','heat_index','congestion_index','special_event'
+UNION ALL
+select raw_data.timestamp,pm25_value,pm10_value,AQI,temp,tempmax,tempmin,feelslikemax,feelslikemin,RH,precip,windspeed,conditions,heat_index,congestion_index,special_event from raw_data,weather_data,events_data  where  DATE_FORMAT(raw_data.timestamp, '%d %m %Y')= DATE_FORMAT(weather_data.timestamp, '%d %m %Y') and DATE_FORMAT(raw_data.timestamp, '%d %m %Y')= DATE_FORMAT(events_data.date, '%d %m %Y') and DATE_FORMAt(raw_data.timestamp,'%H:%i')='11:00'
+ INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/11_values.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
