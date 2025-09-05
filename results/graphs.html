@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <style>
+        canvas {
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Visualization</h1>
+    
+    <canvas id="myChart" width="800" height="600"></canvas>
+
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let myChart;
+
+        async function fetchData() {
+            const response = await fetch('http://localhost:3000/data');
+            return await response.json();
+        }
+
+        function renderChart(data, parameter) {
+            const timestamps = data.map(row => row.timestamp.substring(0,10));
+            const values = data.map(row => row[parameter]);
+            const aqi = data.map(item => parseFloat(item.AQI) || 0);
+            const pm25 = data.map(item => parseFloat(item.pm25_value) || 0);
+            const pm10 = data.map(item => parseFloat(item.pm10_value) || 0);
+            const temp = data.map(item => parseFloat(item.Temperature) || 0);
+
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: 
+                        [
+                        { label: 'AQI', data: aqi, fill: false, borderColor: '#ff3333', backgroundColor: '#ff3333' },
+                        { label: 'PM2.5', data: pm25, fill: false, borderColor: '#ffcc00', backgroundColor: '#ffcc00' },
+                        { label: 'PM10', data: pm10, fill: false, borderColor: '#33ccff', backgroundColor: '#33ccff' },
+                        { label: 'Temp(°C)', data: temp, fill: false, borderColor: '#66ff66', backgroundColor: '#66ff66' }
+                        ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        fetchData().then(data => renderChart(data, 'AQI'));
+    </script>
+</body>
+</html>

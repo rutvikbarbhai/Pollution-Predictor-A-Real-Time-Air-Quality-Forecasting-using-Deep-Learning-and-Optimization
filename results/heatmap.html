@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Quality Heatmap</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: white;
+            padding: 5px;
+            border: 1px solid black;
+            border-radius: 5px;
+            opacity: 0;
+            font-size: 12px;
+        }
+        .axis-label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .legend text {
+            font-size: 12px;
+            font-weight: bold;
+            fill: black; /* Ensure contrast */
+            stroke: white; /* Add outline for visibility */
+            stroke-width: 0.5px;
+        }
+        .legend rect {
+            stroke: black;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Heatmap: AQI, PM2.5, and PM10 Over Time</h2>
+    <svg id="heatmap" width="1200" height="500"></svg>
+    <div class="tooltip"></div>
+
+    <script>
+        // Set dimensions
+        const margin = { top: 50, right: 100, bottom: 120, left: 120 };
+        const width = 1200 - margin.left - margin.right;
+        const height = 500 - margin.top - margin.bottom;
+
+        const svg = d3.select("#heatmap")
+            .append("g")
+            .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+        const tooltip = d3.select(".tooltip");
+
+        // Fetch data from the backend
+        d3.json("http://localhost:3000/data").then(data => {
+            // Convert timestamp to proper format
+            data.forEach(d => d.timestamp = new Date(d.timestamp));
+
+            const dates = [...new Set(data.map(d => d.timestamp.toISOString().split('T')[0]))];
+
+            // Define scales
+            const xScale = d3.scaleBand()
+                .domain(dates)
+                .range([0, width])
+                .padding(0.05);
+
+            const yScale = d3.scaleBand()
+                .domain(["AQI", "PM2.5", "PM10"])
+                .range([0, height])
+                .padding(0.05);
+
+            const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
+                .domain([d3.min(data, d => d.AQI), d3.max(data, d => d.AQI)]);
+
+            // Draw heatmap rectangles
+            const parameters = ["AQI", "pm25_value", "pm10_value"];
+
+            parameters.forEach((param, index) => {
+                svg.selectAll(`.${param}`)
+                    .data(data)
+                    .enter()
+                    .append("rect")
+                    .attr("class", param)
+                    .attr("x", d => xScale(d.timestamp.toISOString().split('T')[0]))
+                    .attr("y", yScale(param === "pm25_value" ? "PM2.5" : param === "pm10_value" ? "PM10" : "AQI"))
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", yScale.bandwidth())
+                    .attr("fill", d => colorScale(d[param]))
+                    .on("mouseover", (event, d) => {
+                        tooltip.style("opacity", 1)
+                            .html(`Date: ${d.timestamp.toISOString().split('T')[0]}<br>${param}: ${d[param]}`)
+                            .style("left", `${event.pageX + 5}px`)
+                            .style("top", `${event.pageY - 28}px`);
+                    })
+                    .on("mouseout", () => tooltip.style("opacity", 0));
+            });
+
+            // X-axis with improved readability
+            svg.append("g")
+                .attr("transform", `translate(0, ${height})`)
+                .call(d3.axisBottom(xScale)
+                    .tickValues(dates.filter((d, i) => i % 3 === 0)) // Show every 3rd date
+                )
+                .selectAll("text")
+                .attr("dx", "-.5em")
+                .attr("dy", ".25em")
+                .attr("transform", "rotate(-30)") // Reduce rotation for better readability
+                .style("text-anchor", "end")
+                .style("font-size", "10px"); // Reduce font size slightly
+
+            // Y-axis
+            svg.append("g").call(d3.axisLeft(yScale));
+
+            // Labels
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", height + margin.bottom - 40)
+                .attr("text-anchor", "middle")
+                .attr("class", "axis-label")
+                .text("Date");
+
+            svg.append("text")
+                .attr("x", -height / 2)
+                .attr("y", -margin.left + 20)
+                .attr("transform", "rotate(-90)")
+                .attr("text-anchor", "middle")
+                .attr("class", "axis-label")
+                .text("Parameter");
+
+            // Legend with better visibility
+            const legendHeight = 200;
+            const legendWidth = 15;
+            const legendSpacing = 20;
+            const legend = svg.append("g")
+                .attr("transform", `translate(${width + 50}, ${height / 2 - legendHeight / 2})`);
+
+            const legendScale = d3.scaleLinear()
+                .domain([d3.min(data, d => d.AQI), d3.max(data, d => d.AQI)])
+                .range([legendHeight, 0]);
+
+            const legendAxis = d3.axisRight(legendScale).ticks(6);
+
+            legend.append("g")
+                .attr("transform", `translate(${legendWidth + 5}, 0)`)
+                .call(legendAxis)
+                .selectAll("text")
+                .style("font-size", "12px")
+                .style("font-weight", "bold")
+                .style("fill", "black")
+                .style("stroke", "white") // White stroke to improve visibility
+                .style("stroke-width", "0.5px");
+
+            // Create color gradient for legend
+            const legendGradient = legend.append("defs")
+                .append("linearGradient")
+                .attr("id", "legendGradient")
+                .attr("x1", "0%").attr("y1", "100%")
+                .attr("x2", "0%").attr("y2", "0%");
+
+            d3.range(10).forEach((d, i) => {
+                legendGradient.append("stop")
+                    .attr("offset", `${i * 10}%`)
+                    .attr("stop-color", colorScale(d3.min(data, d => d.AQI) + i * ((d3.max(data, d => d.AQI) - d3.min(data, d => d.AQI)) / 10)));
+            });
+
+            legend.append("rect")
+                .attr("width", legendWidth)
+                .attr("height", legendHeight)
+                .style("fill", "url(#legendGradient)");
+
+        }).catch(error => console.error("Error loading data:", error));
+    </script>
+
+</body>
+</html>
