@@ -86,16 +86,41 @@ node backend/server.js
 http://localhost:3000
 ```
 
-## 📊 Results
-- ROC plots for model evaluation
--  Heatmaps for feature correlations
--  Interactive web-based pollution prediction interface
 
-## 📜 Research Contributions
+## 👨‍🔬 Inventors
+ 
+- **Dr. Tusar Kanti Mishra**  
+  Associate Professor  
+  Computer Science and Engineering Department  
+  Manipal Institute of Technology, Bengaluru  
+  Manipal Academy of Higher Education, Manipal, India  
+  Email ID: tusar.mishra@manipal.edu
+  
 
-- Integration of Jaya Optimization for robust ML predictions
-- Real-time predictions via TensorFlow.js frontend
-- Structured documentation aligned with research publication standards
+- **Rutvik Avinash Barbhai**  
+  Undergraduate Student  
+  Computer Science and Engineering Department  
+  Manipal Institute of Technology, Bengaluru  
+  Manipal Academy of Higher Education, Manipal, India  
+  Email ID: rutvik.mitblr2022@learner.manipal.edu  
+  Contact Number: +91 7887367708  
+
+- **Sheetal Sinha**  
+  Undergraduate Student  
+  Computer Science and Engineering Department  
+  Manipal Institute of Technology, Bengaluru  
+  Manipal Academy of Higher Education, Manipal, India   
+  Email ID: sheetal.mitblr2022@learner.manipal.edu  
+  Contact Number: +91 9962008641  
+
+- **Ankit Sarkar**  
+  Undergraduate Student  
+  Computer Science and Engineering Department  
+  Manipal Institute of Technology, Bengaluru  
+  Manipal Academy of Higher Education, Manipal, India  
+  Email ID: ankit3.mitblr2022@learner.manipal.edu  
+  Contact Number: +91 8700879300
+
 
 ## 🚀 Future Work
 - Extend to multi-pollution datasets (air, water, noise, soil)
