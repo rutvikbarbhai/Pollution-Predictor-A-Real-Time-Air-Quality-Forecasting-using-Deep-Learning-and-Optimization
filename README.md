@@ -37,7 +37,7 @@ The proposed framework demonstrates potential as a scalable and adaptable soluti
 ├── 📁 src/          
 └── README.md            
 ```
-## 🛠 Tech Stack  
+## <img src="https://github.com/user-attachments/assets/612137fd-b2de-411c-acd7-f94c4811e9f2" height="25px" style="vertical-align:text-bottom;">Tech Stack
 **Languages:** Python, JavaScript  
 **Frameworks/Libraries:** TensorFlow.js, Scikit-learn  
 **Optimization:** Jaya Algorithm  
@@ -122,7 +122,7 @@ http://localhost:3000
   Contact Number: +91 8700879300
 
 
-## 🚀 Future Work
+## <img src="https://github.com/user-attachments/assets/9f0497b8-78b3-4d64-8e7f-ace469c4fe70" alt="features icon" width="35" style="vertical-align:middle;"/> Future Work
 - Extend to multi-pollution datasets (air, water, noise, soil)
 - Deploy as a cloud-based monitoring tool
 - Integrate with IoT sensors for live environmental data streaming
