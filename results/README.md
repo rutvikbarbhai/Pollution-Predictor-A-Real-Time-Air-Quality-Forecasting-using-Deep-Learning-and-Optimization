@@ -21,6 +21,5 @@ This repository contains visual and interactive representations of the projectâ€
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-
-
+   git clone https://github.com/rutvikbarbhai/Pollution-Predictor-A-Real-Time-Air-Quality-Forecasting-using-Deep-Learning-and-Optimization.git
+ 
