@@ -14,7 +14,7 @@ This repository contains visual and interactive representations of the project�
 ---
 
 ### **3️⃣ Heatmap**  
-  <img width="837" height="354" alt="image" src="https://github.com/user-attachments/assets/6ebe206f-ab1b-4949-b16e-d73a021a95d0" />
+  <img width="656" height="400" alt="image" src="https://github.com/user-attachments/assets/6ebe206f-ab1b-4949-b16e-d73a021a95d0" />
 ---
 
 ## 🚀 How to Use
