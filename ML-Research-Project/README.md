@@ -10,3 +10,9 @@
 ├── package.json       #  Contains project metadata, scripts, and dependencies
 └── README.md          #  Documentation file for the project.             
 ```
+## <img src="https://github.com/user-attachments/assets/6672ee8c-15ed-4fb5-9cd5-63c04ac747c1" height="24px" style="vertical-align: bottom; margin-right: 10px;">  Prerequisites
+Before you begin, ensure you have the following installed on your system:
+
+- **Node.js** (v14 or later recommended) → [Download here](https://nodejs.org/)  
+- **npm** (comes with Node.js) or **yarn** for package management  
+- **Git** → [Download here](https://git-scm.com/) (to clone and contribute to the repository)
