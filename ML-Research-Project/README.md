@@ -6,8 +6,7 @@
 
 ```bash
 📁 ML-Research Project/  
-├── index.html         # Main landing page of the project  
-├── index1 (1).html    # Alternate/experimental homepage 
-└── README.md          #  Documentation (this file)
-           
+├── package-lock.json  #  Ensures deterministic dependency versions for consistent builds.
+├── package.json       #  Contains project metadata, scripts, and dependencies
+└── README.md          #  Documentation file for the project.             
 ```
