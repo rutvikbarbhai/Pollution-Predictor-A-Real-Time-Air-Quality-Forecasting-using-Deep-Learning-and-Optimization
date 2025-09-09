@@ -1,4 +1,4 @@
-# <img src="https://github.com/user-attachments/assets/b83b271d-fafe-41be-bf84-7f74ccb310d1" alt="logo" height="30px">Pollution-Predictor: A Real-Time Air Quality Forecasting using Deep Learning and Optimization
+# <img src="https://github.com/user-attachments/assets/b83b271d-fafe-41be-bf84-7f74ccb310d1" alt="logo" height="30px"> Pollution-Predictor: A Real-Time Air Quality Forecasting using Deep Learning and Optimization
 
 
 ## <img src="https://github.com/user-attachments/assets/43c950fd-76fc-4a81-804b-57e89642eb8c" alt="overview" height="30px"> Overview
